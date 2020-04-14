@@ -1,0 +1,9 @@
+{
+    "version": 2,
+    "alias": "https://stefs-bookmarks-app.now.sh",
+    "name": "bookmarks-app",
+    "routes": [
+        { "handle": "filesystem" },
+        { "src": "/.*", "dest": "/index.html" }
+    ]
+  }
