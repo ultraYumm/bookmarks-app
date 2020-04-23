@@ -59,7 +59,7 @@ handleSubmit = e => {
 
       fetch(`http://localhost:8000/api/bookmarks/${this.props.match.params.bookmarkId}`, {
         method: 'PATCH',
-        body: JSON.stringify.inputValues
+        body: JSON.stringify(inputValues)
       
       })
       
