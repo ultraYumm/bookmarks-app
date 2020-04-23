@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
 import AddBookmark from './AddBookmark/AddBookmark';
+import EditBookmark from './EditBookmark/EditBookmark';
 import BookmarkList from './BookmarkList/BookmarkList';
 import BookmarksContext from './BookmarksContext';
 import Nav from './Nav/Nav';
@@ -60,12 +61,24 @@ class App extends Component {
     })
     }
 
+  updateBookmark = updatedBookmark => {
+        const newBookmarks = this.state.bookmarks.map(b =>
+          (b.id === updatedBookmark.id)
+            ? updatedBookmark
+            : b
+        )
+        this.setState({
+          bookmarks: newBookmarks
+        })
+      };
+
+
   componentDidMount() {
     fetch(config.API_ENDPOINT, {
       method: 'GET',
       headers: {
         'content-type': 'application/json',
-        'Authorization': `Bearer ${config.API_KEY}`
+        //'Authorization': `Bearer ${config.API_KEY}`
       }
     })
       .then(res => {
@@ -84,6 +97,8 @@ class App extends Component {
       bookmarks: this.state.bookmarks,
       addBookmark: this.addBookmark,
       deleteBookmark: this.deleteBookmark,
+      updateBookmark: this.updateBookmark,
+
         }
     
         return (
@@ -100,6 +115,14 @@ class App extends Component {
                 onClickCancel={() => history.push('/')}
               />}
           />
+          <Route
+              path='/edit/:bookmarkId'
+                render={({ history })  =>
+                  <EditBookmark
+                    onEditBookmark={this.updateBookmark}
+                    onClickCancel={() => history.push('/')}
+                  />}
+           />
           <Route
         exact
         path='/'

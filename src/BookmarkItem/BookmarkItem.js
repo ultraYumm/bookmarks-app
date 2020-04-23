@@ -3,6 +3,7 @@ import Rating from '../Rating/Rating';
 import BookmarksContext from '../BookmarksContext';
 import config from '../config';
 import './BookmarkItem.css';
+import { Link } from 'react-router-dom';
 
 function deleteBookmarkRequest(bookmarkId, callback) {
   fetch(config.API_ENDPOINT + `/${bookmarkId}`, {
@@ -11,6 +12,7 @@ function deleteBookmarkRequest(bookmarkId, callback) {
       'authorization': `bearer ${config.API_KEY}`
     }
   })
+  
     .then(res => {
       if (!res.ok) {
         // get the error message from the response,
@@ -30,6 +32,8 @@ function deleteBookmarkRequest(bookmarkId, callback) {
       console.error(error)
     })
 }
+
+
 
 export default function BookmarkItem(props) {
   return (
@@ -62,6 +66,12 @@ export default function BookmarkItem(props) {
         >
           Delete
         </button>
+         <Link to={`/edit/${props.id}`}>
+          Edit
+        
+        </Link>
+   
+        
       </div>
     </li>
     )}
