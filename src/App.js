@@ -61,16 +61,14 @@ class App extends Component {
     })
     }
 
-  updateBookmark = updatedBookmark => {
-        const newBookmarks = this.state.bookmarks.map(b =>
-          (b.id === updatedBookmark.id)
-            ? updatedBookmark
-            : b
+    updateBookmark = updatedBookmark => {
+      this.setState({
+        bookmarks: this.state.bookmarks.map(bm =>
+          (bm.id !== updatedBookmark.id) ? bm : updatedBookmark
         )
-        this.setState({
-          bookmarks: newBookmarks
-        })
-      };
+      })
+    }
+  
 
 
   componentDidMount() {
@@ -117,12 +115,8 @@ class App extends Component {
           />
           <Route
               path='/edit/:bookmarkId'
-                render={({ history })  =>
-                  <EditBookmark
-                    onEditBookmark={this.updateBookmark}
-                    onClickCancel={() => history.push('/')}
-                  />}
-           />
+              component={EditBookmark}
+            />
           <Route
         exact
         path='/'

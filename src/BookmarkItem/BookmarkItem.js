@@ -6,10 +6,10 @@ import './BookmarkItem.css';
 import { Link } from 'react-router-dom';
 
 function deleteBookmarkRequest(bookmarkId, callback) {
-  fetch(config.API_ENDPOINT + `/${bookmarkId}`, {
+  fetch(config.API_ENDPOINT + config.ID + `/${bookmarkId}`, {
     method: 'DELETE',
     headers: {
-      'authorization': `bearer ${config.API_KEY}`
+      'content-type': 'application/json',
     }
   })
   
@@ -32,7 +32,6 @@ function deleteBookmarkRequest(bookmarkId, callback) {
       console.error(error)
     })
 }
-
 
 
 export default function BookmarkItem(props) {

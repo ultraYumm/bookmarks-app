@@ -1,5 +1,7 @@
 import React, { Component } from  'react';
+//import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
+import config from '../config'
 import BookmarksContext from '../BookmarksContext';
 import './EditBookmark.css';
 
@@ -8,6 +10,16 @@ const Required = () => (
 )
 
 class EditBookmark extends Component {
+
+  /*static propTypes = {
+    match: PropTypes.shape({
+      params: PropTypes.object,
+    }),
+    history: PropTypes.shape({
+      push: PropTypes.func,
+    }).isRequired,
+  };*/
+
   static contextType = BookmarksContext;
 
   state = {
@@ -16,13 +28,9 @@ class EditBookmark extends Component {
   };
 
   
-  handleClickCancel = () => {
-       this.props.history.push('/')
-     };
-
 componentDidMount() {
     const bookmarkId = this.props.match.params.bookmarkId
-    fetch(`http://localhost:8000/api/bookmarks/${bookmarkId}`, {
+    fetch(config.API_ENDPOINT + `/${bookmarkId}`, {
       method: 'GET'
     })
     .then(res => {
@@ -40,6 +48,10 @@ componentDidMount() {
   }
   )
   }
+
+ /* handleChangeTitle = e => {
+    this.setState({ title: e.target.value })
+  };*/
 
 
 handleSubmit = e => {
@@ -59,27 +71,43 @@ handleSubmit = e => {
 
       fetch(`http://localhost:8000/api/bookmarks/${this.props.match.params.bookmarkId}`, {
         method: 'PATCH',
-        body: JSON.stringify(inputValues)
+        body: JSON.stringify(inputValues),
+        headers: {
+          'content-type': 'application/json',
+        },
       
       })
-      
       .then(res => {
         if (!res.ok) {
-          // get the error message from the response,
-          return res.json().then(error => {
-            // then throw it
-            throw error
-          })
-        }
-        return res.json()
+          console.log(res)
+           return res.json().then(error => Promise.reject(error))
+          }
+           })
+      .then(() => {
+        this.resetFields(inputValues)
+        this.context.updateBookmark(inputValues)
+        window.location.href='/'
+       // this.props.history.push('/')
       })
-        .then(responseData => {
+      .catch(error => {
+        console.error(error)
+        this.setState({ error })
+      })
+  }
 
-                this.context.updateBookmark(responseData)
-               })
-    }
+  resetFields = (newFields) => {
+    this.setState({
+      id: newFields.id || '',
+      title: newFields.title || '',
+      url: newFields.url_ || '',
+      description: newFields.desc_ || '',
+      rating: newFields.rating || '',
+    })
+  }
   
-
+  handleClickCancel = () => {
+    this.props.history.push('/')
+  };
 
   render() {
     const { error } = this.state
@@ -108,6 +136,7 @@ handleSubmit = e => {
               placeholder={title}
               required
               //value={title}
+              //onChange={this.handleChangeTitle}
             />
           </div>
           <div>
@@ -147,10 +176,11 @@ handleSubmit = e => {
               name='rating'
               id='rating'
               //defaultValue='1'
-              min='1'
+              min='0'
               max='5'
               required
-              value={rating}
+              placeholder={rating}
+              //value={rating}
                 />
           </div>
           <div className='EditBookmark__buttons'>
